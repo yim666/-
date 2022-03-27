@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <a-row class="back">
 <!--      首行-->
       <a-col :span="20" >
@@ -86,4 +86,7 @@
     width: 100%;
     /*position: absolute;*/
   }
+  /*html,body{*/
+  /*  height: 100%;*/
+  /*}*/
 </style>

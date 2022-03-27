@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-
     private Integer userId;
 
     private String userName;
@@ -20,5 +19,7 @@ public class User {
     private Integer role;
 
     private String phone;
+
+    private String carId;
 
 }

@@ -88,7 +88,7 @@
               //  get 方法传数据 用params: values 来传
             }).then(res=>{
               let resData = res.data.data
-                this.values = res.data.data
+                this.value = res.data.data
               if(resData !=null){
                 //判断用户角色
                 switch (resData.role){

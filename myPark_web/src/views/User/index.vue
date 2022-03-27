@@ -38,6 +38,7 @@
       </a-tab-pane>
       <a-tab-pane key="2" tab=" 公告 " force-render>
         直接查询数据库公告，按时间排序（给时间加索引）
+        <Notice></Notice>
       </a-tab-pane>
       <a-tab-pane key="3" tab="预约车位">
         地图模块 + 弹出框预约
@@ -56,9 +57,10 @@
 
 <script>
   import Info from "../../components/User/info";
+  import Notice from "../../components/User/notice";
   export default {
     name: "index",
-    components: {Info},
+    components: {Info,Notice},
     data(){
       return{
         cname: this.$cookies.get("cname")

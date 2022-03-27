@@ -1,7 +1,7 @@
 <template>
   <div >
     <a-row >
-          <a-descriptions bordered title="个人信息">
+          <a-descriptions bordered title="个人信息" style="margin-left: 10%;margin-right: 10%">
             <a-descriptions-item  label="用户名" span="1">
               {{user.userName}}
             </a-descriptions-item>

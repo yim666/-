@@ -1,42 +1,54 @@
 <template>
-  <section >
-    <div >
-      <i ></i><span>很高兴遇见你,{{user.userName}} 车主</span>
-    </div>
-    <div >
-      <p >教务公告：</p>
-      <ul>
-        <li @click="openMsg()"><i ></i>清明节放假通知</li>
-        <li @click="openMsg()"><i ></i>下周例行工作报告会</li>
-        <li @click="openMsg()"><i ></i>关于毕业生答辩具体流程</li>
-      </ul>
-    </div>
-  </section>
+  <a-list
+    class="comment-list"
+    :header="`${data.length} 条公告`"
+    item-layout="horizontal"
+    :data-source="data"
+    style="margin-right:10%;margin-left:10% "
+  >
+    <a-list-item slot="renderItem" slot-scope="item, index">
+      <a-comment :author="item.author" :avatar="item.avatar">
+
+        <p slot="content">
+          {{ item.content }}
+        </p>
+        <a-tooltip slot="datetime" :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
+          <span>{{ item.datetime.fromNow() }}</span>
+        </a-tooltip>
+      </a-comment>
+    </a-list-item>
+  </a-list>
 </template>
 
 <script>
+  import moment from 'moment';
   export default {
     name:'notice',
     data() {
       return {
-        user: this.$cookies.get("User")
-      }
+        data: [
+          {
+            actions: ['Reply to'],
+            author: 'Han Solo',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            content:
+              'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+            datetime: moment().subtract(1, 'days'),
+          },
+          {
+            actions: ['Reply to'],
+            author: 'Han Solo',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            content:
+              'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+            datetime: moment().subtract(2, 'days'),
+          },
+        ],
+        moment,
+      };
     },
-    created() {
-      this.getUserInfo()
-    },
-    methods: {
-      getUserInfo() { //获取用户信息
-        let userName = this.$cookies.get("cname")
-        let userId = this.$cookies.get("cid")
-        this.user.userName = userName
-        this.user.userId = userId
-      },
-      openMsg() {
-        this.$alert('根据《国务院办公厅关于2019年部分节假日安排的通知》精神，越城区行政服务中心将于4月5日（星期五）至4月7日（星期天）进行清明节放假调休，共3天，放假期间不受理业务。4月8日（星期一）开始正常上班受理业务。望市民朋友相互转告，给您带来不便，敬请谅解。','清明节放假通知',{
-          confirmButtonText: '确定'
-        })
-      }
+    methods:{
+
     }
   }
 </script>

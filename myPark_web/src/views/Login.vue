@@ -72,7 +72,7 @@
     },
     data(){
       return{
-        value:{}
+        // value:{}
       }
     },
     methods: {
@@ -87,17 +87,21 @@
               data:values
               //  get 方法传数据 用params: values 来传
             }).then(res=>{
+
               let resData = res.data.data
-                this.value = res.data.data
+                // this.value = res.data.data
               if(resData !=null){
                 //判断用户角色
+
                 switch (resData.role){
-                  case'1': //管理员
-                        this.$cookies.set("cname",resData.adminName)
-                        this.$cookies.set("cid",resData.adminId)
-                        this.$cookies.set("role",1)
-                        this.$router.push({path:'/index'})
-                        break
+                  // case注意区分数字和字符
+                  case 1: //管理员
+                    this.$cookies.set("cname",resData.adminName)
+                    this.$cookies.set("cid",resData.adminId)
+                    this.$cookies.set("admin",resData)
+                    this.$cookies.set("role",1)
+                    this.$router.push({path:'/admin/index'})
+                    break
                   case 2: //用户
                     this.$cookies.set("cname",resData.userName)
                     this.$cookies.set("cid",resData.userId)

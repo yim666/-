@@ -1,5 +1,6 @@
 package com.yim.controller;
 
+import com.yim.pojo.Admin;
 import com.yim.pojo.Login;
 import com.yim.pojo.User;
 import com.yim.service.LoginService;
@@ -20,9 +21,11 @@ public class LoginController {
         String userName = login.getUserName();
         String password = login.getPassword();
         int role = userName.charAt(0)-'0';
-//        if (role==1){
-//
-//        }
+//        权限为管理
+        if (role==1){
+            Admin admin = loginService.adminLogin(userName, password);
+            return ApiResHandler.succss(admin);
+        }
         //权限为用户
         if(role==2){
             User user = loginService.userLogin(userName, password);

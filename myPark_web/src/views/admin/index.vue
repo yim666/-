@@ -2,8 +2,11 @@
   <div >
     <a-row class="back">
       <!--      首行-->
-      <a-col :span="20" >
-        <h1  style="font-style:italic;margin-left:20%;margin-top: 2% ;color: blue">
+      <a-col :span="4">
+        <h2 style="margin-left:20%;margin-top: 10% ;" >{{time}}</h2>
+      </a-col>
+      <a-col :span="16" >
+        <h1  style="font-style:italic;margin-top: 2% ;color: blue">
           城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 停 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 车 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 场  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;管&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  理  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;统
         </h1>
       </a-col>
@@ -36,7 +39,7 @@
         <a-tab-pane key="1" tab="用户列表" >
           <UserList></UserList>
         </a-tab-pane>
-        <a-tab-pane key="2" tab=" 公告 " force-render>
+        <a-tab-pane key="2" tab=" 发布公告 " force-render>
           <Notice></Notice>
         </a-tab-pane>
         <a-tab-pane key="3" tab="预约车位">
@@ -46,7 +49,7 @@
           查询所有关联用户id的订单，按时间排序
         </a-tab-pane>
         <a-tab-pane key="5" tab="投诉">
-          Content of Tab Pane 3
+          <Advice></Advice>
         </a-tab-pane>
       </a-tabs>
 
@@ -55,14 +58,16 @@
 </template>
 
 <script>
-  import Notice from "../../components/User/notice";
+  import Notice from "../../components/admin/notice";
+  import Advice from "../../components/admin/advice";
   import UserList from "../../components/admin/UserList";
   export default {
     name: "index",
-    components: {UserList,Notice},
+    components: {UserList,Notice,Advice},
     data(){
       return{
-        cname: this.$cookies.get("cname")
+        cname: this.$cookies.get("cname"),
+        time:''
       }
     },
     methods:{
@@ -75,7 +80,17 @@
       },
       cancel(){
         this.$message.error('取消退出');
+      },
+      thisTime(){
+        // 实现局部刷新
+        setInterval(()=>{
+          var myDate = new Date();
+          this.time=myDate.toLocaleString( );
+        },1000)
       }
+    },
+    created() {
+      this.thisTime()
     }
   }
 </script>

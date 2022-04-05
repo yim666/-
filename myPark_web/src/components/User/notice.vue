@@ -1,23 +1,23 @@
 <template>
   <a-list
-    class="comment-list"
-    :header="`${data.length} 条公告`"
+    :header="`${noticeList.length} 条公告`"
     item-layout="horizontal"
-    :data-source="data"
-    style="margin-right:10%;margin-left:10% "
+    :data-source="noticeList"
+    style="margin-right:20%;margin-left:20% "
+    :pagination="pagination"
   >
     <a-list-item slot="renderItem" slot-scope="item, index">
-      <a-comment :author="item.author" :avatar="item.avatar">
-
+      <a-comment :author="item.adminId" :avatar="avatar">
         <p slot="content">
           {{ item.content }}
         </p>
-        <a-tooltip slot="datetime" :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
-          <span>{{ item.datetime.fromNow() }}</span>
+        <a-tooltip slot="datetime" :title="item.time">
+          <span>{{item.time}}</span>
         </a-tooltip>
       </a-comment>
     </a-list-item>
   </a-list>
+
 </template>
 
 <script>
@@ -26,29 +26,24 @@
     name:'notice',
     data() {
       return {
-        data: [
-          {
-            actions: ['Reply to'],
-            author: 'Han Solo',
-            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-            content:
-              'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            datetime: moment().subtract(1, 'days'),
-          },
-          {
-            actions: ['Reply to'],
-            author: 'Han Solo',
-            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-            content:
-              'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            datetime: moment().subtract(2, 'days'),
-          },
-        ],
+        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
         moment,
+        noticeList:[],
+        pagination:{
+          pageSize:2
+        }
       };
     },
     methods:{
-
+        selectNotice(){
+          //前端框架（ant-design）实现分页
+          this.$axios.get('/api/user/selectNoticeList').then(res=>{
+            this.noticeList=res.data.data
+          })
+        }
+    },
+    created() {
+      this.selectNotice()
     }
   }
 </script>

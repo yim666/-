@@ -1,88 +1,138 @@
 <template>
-  <a-table :columns="columns" :data-source="data" class="mar">
-    <a slot="name" slot-scope="text">{{ text }}</a>
-    <span slot="customTitle"><a-icon type="smile-o" /> Name</span>
-    <span slot="tags" slot-scope="tags">
-      <a-tag
-        v-for="tag in tags"
-        :key="tag"
-        :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
-      >
-        {{ tag.toUpperCase() }}
-      </a-tag>
-    </span>
-    <span slot="action" slot-scope="text, record">
-      <a>Invite 一 {{ record.name }}</a>
-      <a-divider type="vertical" />
-      <a>Delete</a>
-      <a-divider type="vertical" />
-      <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
-    </span>
+  <div>
+  <a-table :columns="columns" :data-source="this.userList" class="mar" :pagination="{pageSize:10}" >
+    <a slot="userId" slot-scope="text">{{ text }}</a>
+    <span slot="customTitle"><a-icon type="smile-o" /> 用户ID</span>
+<!--    行操作-->
+    <template
+      v-for="col in ['userName', 'email', 'phone','carId']"
+      :slot="col"
+      slot-scope="text, record, index"
+    >
+      <div :key="col">
+        <a-input
+          v-if="record.editable"
+          style="margin: -5px 0"
+          :value="text"
+          @change="e => handleChange(e.target.value, record.userId, col)"
+        />
+        <template v-else>
+          {{ text }}
+        </template>
+      </div>
+    </template>
+    <template slot="action" slot-scope="text, record, index">
+      <div >
+        <span v-if="record.editable">
+          <a @click="() => save(record.userId)">Save</a>
+          <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.userId)">
+            <a>Cancel</a>
+          </a-popconfirm>
+        </span>
+        <span v-else>
+          <a :disabled="editingKey !== ''" @click="() => edit(record.userId)">Edit</a>
+        </span>
+      </div>
+    </template>
   </a-table>
+  </div>
 </template>
 <script>
   const columns = [
     {
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'userId',
+      key: 'userId',
       slots: { title: 'customTitle' },
-      scopedSlots: { customRender: 'name' },
+      scopedSlots: { customRender: 'userId' },
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: '用户名',
+      dataIndex: 'userName',
+      scopedSlots: { customRender: 'userName' },
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: '用户邮箱',
+      dataIndex: 'email',
+      scopedSlots: { customRender: 'email' },
+
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      scopedSlots: { customRender: 'tags' },
+      title: '用户手机号',
+      dataIndex: 'phone',
+      scopedSlots: { customRender: 'phone' },
+    },
+    {
+      title: '用户车牌号',
+      dataIndex: 'carId',
+      scopedSlots: { customRender: 'carId' },
     },
     {
       title: 'Action',
-      key: 'action',
       scopedSlots: { customRender: 'action' },
-    },
+    }
   ];
-
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-
+  const userList=[];
   export default {
     name:"userList",
     data() {
       return {
-        data,
         columns,
+        userList,
+        cacheData:[],
+        editingKey: '',
+        target:{}
       };
     },
+    methods:{
+      selcetUserList(){
+        this.$axios.get('/api/admin/selectUserList').then(res=>{
+          this.userList=res.data.data
+        })
+      },
+      handleChange(value, key, column) {
+        if (this.target.editable){
+          this.$set(this.target,column,value)
+        }
+      },
+      edit(key) {
+        this.cacheData =this.userList.map(item => ({ ...item }))
+        this.target = this.userList.find(item => key === item.userId)
+        this.editingKey = key
+        if(this.target){
+          this.$set(this.target,'editable',true)
+        }
+      },
+       save(key) {
+        let i=0
+        //取target是userlist的第几条数据  key 是 userId
+        for(; i<this.userList.length;i++){
+          if(this.userList[i].userId === key) {
+            break
+          }
+        }
+        this.$delete(this.target,'editable')
+         this.$axios({
+           url:'/api/admin/updateUserList',
+           method:"put",
+           data:this.target
+         }).then(res=>{
+          if (res.data.data){
+            this.$message.success("修改成功")
+          }
+        })
+        this.$set(this.target,'editable',false)
+        // this.userList[i]=this.target
+        this.editingKey = ''
+      },
+      cancel(key) {
+        this.editingKey = ''
+        this.target.editable =false
+        this.userList = this.cacheData.map(item => ({ ...item }))
+      },
+    },
+    created() {
+      this.selcetUserList()
+    }
   };
 </script>
 

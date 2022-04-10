@@ -1,14 +1,8 @@
 package com.yim.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yim.mapper.AdviceMapper;
-import com.yim.mapper.NoticeMapper;
-import com.yim.mapper.ParkingLotMappr;
-import com.yim.mapper.ParkingSpaceMapper;
-import com.yim.pojo.Advice;
-import com.yim.pojo.Notice;
-import com.yim.pojo.ParkingLot;
-import com.yim.pojo.ParkingSpace;
+import com.yim.mapper.*;
+import com.yim.pojo.*;
 import com.yim.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +19,9 @@ public class UserServiceImpl implements UserService {
     private ParkingLotMappr parkingLotMappr;
     @Autowired
     private ParkingSpaceMapper parkingSpaceMappr;
+
+    @Autowired
+    private OrderMapper orderMapper;
     @Override
     public List<Notice> selectNoticeList() {
         QueryWrapper qw = new QueryWrapper();
@@ -54,8 +51,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ParkingSpace> selectParkingSpace(Integer lotId) {
-        QueryWrapper qw = new QueryWrapper();
-        qw.eq("parking_lot_id", lotId);
+        QueryWrapper<ParkingSpace> qw = new QueryWrapper();
+        qw.eq("parking_lot_id", lotId).eq("status", 0);
         return parkingSpaceMappr.selectList(qw);
+    }
+
+    @Override
+    public int updateSpaceStatus(ParkingSpace space) {
+        return parkingSpaceMappr.updateStatus(space);
+    }
+
+    @Override
+    public int createOrder(Order order) {
+        return orderMapper.insertOrder(order);
+    }
+
+    @Override
+    public List<Order> selectMyorderList(Integer userId) {
+        QueryWrapper qw = new QueryWrapper();
+        qw.eq("user_id", userId);
+        return orderMapper.selectList(qw);
     }
 }

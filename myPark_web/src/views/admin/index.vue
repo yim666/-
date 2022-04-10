@@ -42,11 +42,13 @@
         <a-tab-pane key="2" tab=" 发布公告 " force-render>
           <Notice></Notice>
         </a-tab-pane>
-        <a-tab-pane key="3" tab="预约车位">
-          地图模块 + 弹出框预约
+        <a-tab-pane key="3" tab="车位管理">
+<!--          地图模块 + 弹出框预约-->
+          <lotManage></lotManage>
         </a-tab-pane>
         <a-tab-pane key="4" tab="历史订单">
-          查询所有关联用户id的订单，按时间排序
+<!--          查询所有关联用户id的订单，按时间排序-->
+          <OrderList></OrderList>
         </a-tab-pane>
         <a-tab-pane key="5" tab="投诉">
           <Advice></Advice>
@@ -61,9 +63,11 @@
   import Notice from "../../components/admin/notice";
   import Advice from "../../components/admin/advice";
   import UserList from "../../components/admin/UserList";
+  import OrderList from "../../components/admin/orderHistory";
+  import lotManage from "../../components/admin/lotManage";
   export default {
     name: "index",
-    components: {UserList,Notice,Advice},
+    components: {UserList,Notice,Advice,OrderList,lotManage},
     data(){
       return{
         cname: this.$cookies.get("cname"),

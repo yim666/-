@@ -1,8 +1,6 @@
 package com.yim.controller;
 
-import com.yim.pojo.Advice;
-import com.yim.pojo.Notice;
-import com.yim.pojo.User;
+import com.yim.pojo.*;
 import com.yim.service.AdminService;
 import com.yim.util.ApiResHandler;
 import com.yim.util.PageRes;
@@ -11,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -49,6 +48,39 @@ public class AdminController {
     public ApiRes selectAdviceList(){
         List<Advice> advice = adminService.selectAdviceList();
         return ApiResHandler.succss(advice);
+    }
+
+    @GetMapping("/selectOrderList")
+    public ApiRes selectOrderList(){
+        List<Order> Order = adminService.selectOrderList();
+        return ApiResHandler.succss(Order);
+    }
+
+    @GetMapping("/selectParkingSpace")
+    public ApiRes selectParkingSpace(Integer lotId){
+        List<ParkingSpace> spaces = adminService.selectParkingSpace(lotId);
+        return ApiResHandler.succss(spaces);
+    }
+
+    @PostMapping("/addSpace")
+    public ApiRes addSpace(@RequestBody Map map){
+        Integer id = (Integer) map.get("lotId");
+        ParkingSpace space = new ParkingSpace();
+        space.setParkingLotId(id);
+        space.setStatus(0);
+        int i = adminService.addSpace(space);
+        return ApiResHandler.succss(i);
+    }
+
+    @PutMapping("/changeSta")
+    public ApiRes changeSta(@RequestBody Map m){
+        Integer spaceId = (Integer) m.get("spaceId");
+        Integer spaceStatus = Integer.parseInt((String) m.get("spaceStatus")) ;
+        ParkingSpace space = new ParkingSpace();
+        space.setParkingSpaceId(spaceId);
+        space.setStatus(spaceStatus);
+        int i = adminService.changeSta(space);
+        return ApiResHandler.succss(i);
     }
 
 }

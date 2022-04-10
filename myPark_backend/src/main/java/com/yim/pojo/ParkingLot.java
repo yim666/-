@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ParkingLot {
     private Integer parkingLotId;
     private String parkingLotName;
+    private Integer status;
 }

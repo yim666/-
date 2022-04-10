@@ -1,0 +1,145 @@
+<template>
+  <a-table :columns="columns" :data-source="data" style="margin-right:15%;margin-left:15% "
+           :rowKey="record => record.ParkingLotId" @expand="expand"  expandRowByClick
+           @expandedRowsChange="expandedRowsChange"
+           :expandedRowKeys="expandedRowKeys"
+           :pagination="false">
+    <a slot="operation" slot-scope="text, record, index" @click="addSpace(record) ">addSpace</a>
+    <a-table
+      slot="expandedRowRender"
+      slot-scope="text"
+      :columns="innerColumns"
+      :data-source="innerData"
+    >
+      <span slot="operation" slot-scope="text, record, index" @click="()=>rowSpace=record">
+        <a-dropdown>
+          <a-menu slot="overlay" :value="text" @click="changeSta">
+            <a-menu-item key="0">
+              空闲
+            </a-menu-item>
+            <a-menu-item key="1">
+              已预订
+            </a-menu-item>
+            <a-menu-item key="2">
+              停车中
+            </a-menu-item>
+          </a-menu>
+          <a> changeStatus <a-icon type="down" /> </a>
+        </a-dropdown>
+        <a-col :span="4"></a-col>
+        <a-button type="danger" size="small" >
+        Delete
+        </a-button>
+      </span>
+    </a-table>
+  </a-table>
+</template>
+
+<script>
+  const columns = [
+    { title: '停车场编号', dataIndex: 'parkingLotId', key: 'parkingLotId' },
+    { title: '停车场名称', dataIndex: 'parkingLotName', key: 'parkingLotName' },
+    { title: '停车场使用情况', dataIndex: 'status', key: 'status' },
+    { title: 'Action', key: 'operation', scopedSlots: { customRender: 'operation' } },
+  ];
+
+  const innerColumns = [
+    { title: '所属停车场', dataIndex: 'parkingLotId', key: 'parkingLotId' ,align:'center'},
+    { title: '停车位编号', dataIndex: 'parkingSpaceId', key: 'parkingSpaceId' ,align:'center'},
+    { title: '停车场使用情况', dataIndex: 'status', key: 'status',align:'center' },
+    {
+      title: 'Action',
+      dataIndex: 'operation',
+      key: 'operation',
+      scopedSlots: { customRender: 'operation' },
+      align:'center'
+    },
+  ];
+
+  export default {
+    name: "lotManage",
+    data() {
+      return {
+        data:[],
+        columns,
+        innerColumns,
+        innerData:[],
+        expandedRowKeys:[],
+        rowSpace:{}
+      }
+    },
+    methods:{
+      changeSta(record){
+        console.log(record)
+        console.log(this.rowSpace)
+        this.$axios.put('/api/admin/changeSta',{
+          spaceStatus:record.key,
+          spaceId:this.rowSpace.parkingSpaceId
+        }).then(res=>{
+          if(res.data.data === null || res.data.data === ''){
+            this.$message.warn("车位状态修改失败！！！")
+            return
+          }
+          this.expandedRowKeys=[]
+          this.$message.success("车位状态修改成功！！！")
+        })
+      },
+      addSpace(record){
+        console.log(this.status2)
+        // var lotId=record.parkingLotId
+        this.$axios.post('/api/admin/addSpace',{lotId:record.parkingLotId}).then(res=>{
+          if(res.data.data === null || res.data.data === ''){
+            this.$message.warn("增加停车位失败！！！")
+            return
+          }
+          this.selectParkingLot()
+          this.$message.success("增加停车位成功！！！")
+        })
+      },
+      selectParkingLot() {
+        this.$axios.get("api/user/selectParkingLot").then(res=>{
+          this.data=res.data.data
+          for(var i=0;i<this.data.length;i++) {
+            if (this.data[i].status == 0) {
+              this.data[i].status = '停车场使用中'
+            }
+          }
+        })
+      },
+      expand(expanded,record){
+        if(expanded){
+           this.$axios.get("api/admin/selectParkingSpace",{params:{lotId:record.parkingLotId}}).then(res=>{
+             this.innerData=res.data.data
+             for(var i=0;i<this.innerData.length;i++) {
+               if (this.innerData[i].status == 0) {
+                 this.innerData[i].status = '空闲'
+               }
+               if (this.innerData[i].status == 1) {
+                 this.innerData[i].status = '已预订'
+               }
+               if (this.innerData[i].status == 2) {
+                 this.innerData[i].status = '停车中'
+               }
+             }
+           })
+        }
+      },
+      expandedRowsChange (expandedRows) {
+        //只能打开一个内部table ,打开第二个时，上一个自动关闭
+        if (expandedRows.length >1){
+          this.expandedRowKeys=[]
+          this.expandedRowKeys = [expandedRows[1]]
+        }else {
+          this.expandedRowKeys=expandedRows
+        }
+      }
+    },
+    created() {
+      this.selectParkingLot()
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

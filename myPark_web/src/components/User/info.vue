@@ -32,7 +32,7 @@
     name: "info",
     data(){
       return{
-        user:this.$cookies.get("User")
+        user:this.$cookies.get("user")
       }
     },
     methods:{

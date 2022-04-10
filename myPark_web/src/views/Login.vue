@@ -105,7 +105,7 @@
                   case 2: //用户
                     this.$cookies.set("cname",resData.userName)
                     this.$cookies.set("cid",resData.userId)
-                    this.$cookies.set("User",resData)
+                    this.$cookies.set("user",resData)
                     this.$cookies.set("role",2)
                     this.$router.push({path:'/user/index'})
                     break

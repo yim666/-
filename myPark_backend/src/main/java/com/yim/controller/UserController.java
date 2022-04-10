@@ -1,16 +1,15 @@
 package com.yim.controller;
 
-import com.yim.pojo.Advice;
-import com.yim.pojo.Notice;
-import com.yim.pojo.ParkingLot;
-import com.yim.pojo.ParkingSpace;
+import com.yim.pojo.*;
 import com.yim.service.UserService;
 import com.yim.util.ApiResHandler;
 import com.yim.vo.ApiRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -44,9 +43,38 @@ public class UserController {
         return ApiResHandler.succss(lots);
     }
 
+    //查询可使用的停车位
     @GetMapping("/selectParkingSpace")
     public ApiRes selectParkingSpace(Integer lotId){
         List<ParkingSpace> spaces = userService.selectParkingSpace(lotId);
         return ApiResHandler.succss(spaces);
+    }
+
+    @PutMapping("/updateSpaceStatus")
+    public ApiRes updateSpaceStatus(@RequestBody ParkingSpace space){
+        int i = userService.updateSpaceStatus(space);
+        return ApiResHandler.succss(i);
+    }
+
+    @PostMapping("/createOrder")
+    public ApiRes createOrder(@RequestBody Map<String,Map> map){
+        Map user = map.get("user");
+        Map space = map.get("parkingSpace");
+        Order order = new Order();
+        order.setUserId((Integer) user.get("userId"));
+        order.setParkingSpaceId((Integer) space.get("parkingSpaceId"));
+        order.setCarId((String) user.get("carId"));
+        order.setCreateTime(null);
+        order.setFee(null);
+        order.setStatus(0);
+        int i = userService.createOrder(order);
+        return ApiResHandler.succss(i);
+    }
+
+
+    @GetMapping("/selectMyorderList")
+    public ApiRes selectMyorderList(Integer userId){
+        List<Order> Myorder = userService.selectMyorderList(userId);
+        return ApiResHandler.succss(Myorder);
     }
 }

@@ -3,7 +3,7 @@
   <a-button type="primary" @click="()=> visible =true">投诉建议</a-button>
 
   <!--  公告内容弹窗-->
-  <a-modal title="投诉建议" :visible="visible" @cancel="()=>(visible=false)">
+  <a-modal title="投诉建议" :visible="visible" @cancel="()=>(visible=false,this.content='')">
     <a-form-model ref="writeForm"  >
       <a-form-model-item  >
         <a-textarea v-model="content" :auto-size="{ minRows: 5, maxRows: 10 }" />
@@ -76,6 +76,7 @@
           }
           this.$message.success("投诉成功！！！")
           this.visible=false
+          this.content=''
           this.selectMyAdvice()
         })
       },

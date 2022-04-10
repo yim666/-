@@ -3,13 +3,8 @@ package com.yim.service.serviceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yim.mapper.AdminMapper;
-import com.yim.mapper.AdviceMapper;
-import com.yim.mapper.NoticeMapper;
-import com.yim.mapper.UserMapper;
-import com.yim.pojo.Advice;
-import com.yim.pojo.Notice;
-import com.yim.pojo.User;
+import com.yim.mapper.*;
+import com.yim.pojo.*;
 import com.yim.service.AdminService;
 import com.yim.util.PageRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +23,11 @@ public class AdminServiceImpl implements AdminService {
     private NoticeMapper noticeMapper;
     @Autowired
     private AdviceMapper adviceMapper;
+    @Autowired
+    private OrderMapper orderMapper;
 
+    @Autowired
+    private ParkingSpaceMapper parkingSpaceMapper;
     @Override
     public List<User> selectUserList() {
 
@@ -66,5 +65,27 @@ public class AdminServiceImpl implements AdminService {
         qw.orderByDesc("time");
         List<Advice> list = adviceMapper.selectList(qw);
         return list;
+    }
+
+    @Override
+    public List<Order> selectOrderList() {
+        return orderMapper.selectList(null);
+    }
+
+    @Override
+    public List<ParkingSpace> selectParkingSpace(Integer lotId) {
+        QueryWrapper<ParkingSpace> qw = new QueryWrapper();
+        qw.eq("parking_lot_id", lotId);
+        return parkingSpaceMapper.selectList(qw);
+    }
+
+    @Override
+    public int addSpace(ParkingSpace space) {
+        return parkingSpaceMapper.insert(space);
+    }
+
+    @Override
+    public int changeSta(ParkingSpace space) {
+        return parkingSpaceMapper.updateStatus(space);
     }
 }

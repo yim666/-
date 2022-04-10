@@ -1,8 +1,6 @@
 package com.yim.service;
 
-import com.yim.pojo.Advice;
-import com.yim.pojo.Notice;
-import com.yim.pojo.User;
+import com.yim.pojo.*;
 import com.yim.util.PageRes;
 
 import java.util.List;
@@ -17,4 +15,12 @@ public interface AdminService {
     int createNotice(Notice notice);
 
     List<Advice> selectAdviceList();
+
+    List<Order> selectOrderList();
+
+    List<ParkingSpace> selectParkingSpace(Integer lotId);
+
+    int addSpace(ParkingSpace space);
+
+    int changeSta(ParkingSpace space);
 }

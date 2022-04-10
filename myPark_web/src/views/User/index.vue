@@ -47,7 +47,8 @@
         <OrderSpace></OrderSpace>
       </a-tab-pane>
       <a-tab-pane key="4" tab="历史订单">
-        查询所有关联用户id的订单，按时间排序
+<!--        查询所有关联用户id的订单，按时间排序-->
+        <OrderHistory></OrderHistory>
       </a-tab-pane>
       <a-tab-pane key="5" tab="投诉">
         <Advice></Advice>
@@ -63,9 +64,10 @@
   import Notice from "../../components/User/notice";
   import Advice from "../../components/User/advice";
   import OrderSpace from "../../components/User/orderSpace";
+  import OrderHistory from "../../components/User/OrderHistory";
   export default {
     name: "index",
-    components: {Info,Notice,Advice,OrderSpace},
+    components: {Info,Notice,Advice,OrderSpace,OrderHistory},
     data(){
       return{
         cname: this.$cookies.get("cname"),

@@ -49,9 +49,9 @@
       return{
         columns,
         myOrderList:[],
-        userId: this.$cookies.get("cid"),
+        userId: this.$cookies.get("uid"),
         pagination:{
-          pageSize:5,
+          pageSize:8,
           hideOnSinglePage:true
         }
       }
@@ -62,17 +62,24 @@
           this.myOrderList=res.data.data
           for(var i=0;i<this.myOrderList.length;i++){
             if(this.myOrderList[i].status==0){
-              this.myOrderList[i].status='订单进行中'
-            }
-            if(this.myOrderList[i].status==1){
               this.myOrderList[i].status='订单已完成'
+            }
+            if(this.myOrderList[i].status==1 || this.myOrderList[i].status==2){
+              this.myOrderList[i].status='订单进行中'
             }
            }
         })
+      },
+      thisTime(){
+        // 实现局部刷新
+        setInterval(()=>{
+          this.selectMyorderList()
+        },5000)
       }
     },
-    created() {
+    mounted() {
       this.selectMyorderList()
+      this.thisTime()
     }
   }
 </script>

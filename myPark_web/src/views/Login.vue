@@ -96,17 +96,17 @@
                 switch (resData.role){
                   // case注意区分数字和字符
                   case 1: //管理员
-                    this.$cookies.set("cname",resData.adminName)
-                    this.$cookies.set("cid",resData.adminId)
+                    this.$cookies.set("aname",resData.adminName)
+                    this.$cookies.set("aid",resData.adminId)
                     this.$cookies.set("admin",resData)
-                    this.$cookies.set("role",1)
+                    this.$cookies.set("arole",1)
                     this.$router.push({path:'/admin/index'})
                     break
                   case 2: //用户
-                    this.$cookies.set("cname",resData.userName)
-                    this.$cookies.set("cid",resData.userId)
+                    this.$cookies.set("uname",resData.userName)
+                    this.$cookies.set("uid",resData.userId)
                     this.$cookies.set("user",resData)
-                    this.$cookies.set("role",2)
+                    this.$cookies.set("urole",2)
                     this.$router.push({path:'/user/index'})
                     break
                 }

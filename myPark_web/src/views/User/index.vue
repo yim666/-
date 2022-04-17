@@ -36,7 +36,7 @@
 
     <a-row>
     <a-tabs default-active-key="1" @change="callback" size="large">
-      <a-tab-pane key="1" tab="基本信息" >
+      <a-tab-pane key="1" tab="基本信息"  >
         <Info></Info>
       </a-tab-pane>
       <a-tab-pane key="2" tab=" 公告 " force-render>
@@ -44,7 +44,8 @@
       </a-tab-pane>
       <a-tab-pane key="3" tab="预约车位">
 <!--        地图模块 + 弹出框预约-->
-        <OrderSpace></OrderSpace>
+<!--        <OrderSpace></OrderSpace>-->
+        <MyMap ></MyMap>
       </a-tab-pane>
       <a-tab-pane key="4" tab="历史订单">
 <!--        查询所有关联用户id的订单，按时间排序-->
@@ -65,9 +66,10 @@
   import Advice from "../../components/User/advice";
   import OrderSpace from "../../components/User/orderSpace";
   import OrderHistory from "../../components/User/OrderHistory";
+  import MyMap from "../../components/util/myMap";
   export default {
     name: "index",
-    components: {Info,Notice,Advice,OrderSpace,OrderHistory},
+    components: {Info,Notice,Advice,OrderSpace,OrderHistory,MyMap},
     data(){
       return{
         cname: this.$cookies.get("cname"),

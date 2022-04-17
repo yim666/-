@@ -50,7 +50,7 @@
         columns,
         orderList:[],
         pagination:{
-          pageSize:5,
+          pageSize:8,
           hideOnSinglePage:true
         }
       }
@@ -61,17 +61,24 @@
           this.orderList=res.data.data
           for(var i=0;i<this.orderList.length;i++){
             if(this.orderList[i].status==0){
-              this.orderList[i].status='订单进行中'
-            }
-            if(this.orderList[i].status==1){
               this.orderList[i].status='订单已完成'
+            }
+            if(this.orderList[i].status==1 || this.orderList[i].status==2){
+              this.orderList[i].status='订单进行中'
             }
            }
         })
+      },
+      thisTime(){
+        // 实现局部刷新
+        setInterval(()=>{
+          this.selectOrderList()
+        },5000)
       }
     },
     created() {
       this.selectOrderList()
+      this.thisTime()
     }
   }
 </script>

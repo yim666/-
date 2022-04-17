@@ -69,7 +69,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Order> selectOrderList() {
-        return orderMapper.selectList(null);
+        QueryWrapper qw = new QueryWrapper();
+        qw.orderByDesc("create_time");
+        return orderMapper.selectList(qw);
     }
 
     @Override
@@ -85,7 +87,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public int changeSta(ParkingSpace space) {
-        return parkingSpaceMapper.updateStatus(space);
+    public int changeSta(ParkingSpace space, Order order) {
+        parkingSpaceMapper.updateStatus(space);
+//        orderMapper.updateStatus(order);
+        return space.getStatus();
+    }
+
+    @Override
+    public int deleteSpace(Integer id) {
+        return parkingSpaceMapper.deleteById(id);
     }
 }

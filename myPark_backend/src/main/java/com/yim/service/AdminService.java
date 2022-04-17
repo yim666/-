@@ -22,5 +22,7 @@ public interface AdminService {
 
     int addSpace(ParkingSpace space);
 
-    int changeSta(ParkingSpace space);
+    int changeSta(ParkingSpace space, Order order);
+
+    int deleteSpace(Integer id);
 }

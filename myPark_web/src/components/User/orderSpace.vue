@@ -1,9 +1,15 @@
 <template>
-  <div>
+  <div >
 <!--    查看当前车位情况-->
-      <a-button type="primary" @click="showDrawer">
+      <a-button type="primary" @click="showDrawer" icon="search" style="position: relative;align:center;z-index: 5">
         查看车位
       </a-button>
+      <a-button type="primary" @click="showDrawer2" style="position: relative;align:center;margin-left:20px;z-index: 5">
+        <a-icon type="home" />
+        当前订单
+      </a-button>
+
+<!--      车位抽屉-->
       <a-drawer
         title="车位情况"
         placement="right"
@@ -13,6 +19,8 @@
         :after-visible-change="afterVisibleChange"
         @close="onClose"
       >
+
+        <h2 style="color: tan;margin: 50px"><a-icon type="clock-circle" />  停车费￥10/h ,不满1h按1h计算</h2>
         <a-card :title="title" hoverable >
           <a-popover v-for="item in parkingLot" :key="item.parkingLotId">
             <template slot="content">
@@ -35,21 +43,101 @@
           <a-button type="primary" :disabled="flag" @click="()=>(visible2=true)">预定车位</a-button>
         </a-card>
 
-        <a-modal title="温馨提示" :visible="visible2" @cancel="()=>(visible2=false)" @ok="modalok"
+        <a-modal title="温馨提示" :visible="visible2" @cancel="()=>(visible2=false)" @ok="orderCreate"
         okText="确认预定" cancelText="我再想想">
           <p style="color: blue">预定成功后，请在十五分钟内变更订单状态为停车中，否则将自动取消订单并释放车位</p>
           <h3 style="color: red ">是否继续预定？</h3>
         </a-modal>
       </a-drawer>
+
+    <a-drawer
+      title="当前订单"
+      placement="bottom"
+      :closable="false"
+      :visible="visible3"
+      @close="onClose"
+    >
+      <a-table
+        :columns="innerColumns"
+        :data-source="this.innerData"
+        :pagination="false"
+      >
+      <span slot="operation" slot-scope="text, record, index" @click="()=>rowSpace=record">
+        <a-dropdown>
+          <a-menu slot="overlay" :value="text" @click="changeSta">
+            <a-menu-item key="2">
+              停车中
+            </a-menu-item>
+            <a-menu-item key="0">
+              结束订单
+            </a-menu-item>
+          </a-menu>
+          <a> changeStatus <a-icon type="down" /> </a>
+        </a-dropdown>
+      </span>
+      </a-table>
+    </a-drawer>
   </div>
 </template>
 
 <script>
-  import moment from 'moment';
+  const innerColumns = [
+    {
+      title: '订单编号',
+      dataIndex: 'id',
+      align:'center'
+    },
+    {
+      title: '用户名',
+      dataIndex: 'userId',
+      align:'center'
+    },
+    {
+      title: '停车位',
+      dataIndex: 'parkingSpaceId',
+      align:'center'
+    },
+    {
+      title: '车牌号',
+      dataIndex: 'carId',
+      align:'center'
+    },{
+      title: '订单创建时间',
+      dataIndex: 'createTime',
+      width:200,
+      align:'center'
+    },
+    // {
+    //   title: '订单结束时间',
+    //   dataIndex: 'endTime',
+    //   width:200,
+    //   align:'center'
+    // },
+    {
+      title: '停车费',
+      dataIndex: 'fee',
+      align:'center'
+    },{
+      title: '订单状态',
+      dataIndex: 'status',
+      align:'center'
+    },
+    {
+      title: 'Action',
+      dataIndex: 'operation',
+      key: 'operation',
+      scopedSlots: { customRender: 'operation' },
+      align:'center'
+    },
+  ];
   export default {
     name: "orderSpace",
     data(){
       return {
+        rowSpace:{},
+        innerColumns,
+        innerData:[],
+        visible3:false,
         visible2:false,
         visible:false,
         title: '',
@@ -58,7 +146,7 @@
         parkingSpace:[],
         lotSpace:[],
         lotSpaceLength:0,
-        userId: this.$cookies.get("cid"),
+        userId: this.$cookies.get("uid"),
         space: {
           parkingSpaceId:0,
           parkingLotId:0,
@@ -71,16 +159,30 @@
       }
     },
     methods:{
+      //修改车位状态和订单状态
+      changeSta(record){
+        console.log(this.rowSpace)
+        this.$axios.put('/api/user/changeSta',{
+          spaceStatus:record.key,
+          spaceId:this.rowSpace.parkingSpaceId,
+          id:this.rowSpace.id,
+          createTime:this.rowSpace.createTime,
+          userId:this.$cookies.get("uid")
+        }).then(res=>{
+          if(res.data.data === null || res.data.data === ''){
+            this.$message.warn("车位状态修改失败！！！")
+            return
+          }
+          this.$message.success("车位状态修改成功！！！")
+          this.selectMyorderList()
+          this.visible3=true
+        })
+      },
+      // 选择想要预定的停车位
       selectChange(id){
        this.space.parkingSpaceId=id
       },
-      modalok(){
-        this.lockSpcae()
-        this.orderCreate()
-        this.visible2=false
-        this.visible=false
-
-      },
+      // 查询停车场剩余车位
       async order(item){
         this.nowParkingLot=item
         this.space.parkingLotId=item.parkingLotId
@@ -96,12 +198,14 @@
           }
         })
       },
+      // 查询城市停车场数量
       selectParkingLot(){
         this.$axios.get("api/user/selectParkingLot").then(res=>{
           this.parkingLot=res.data.data
           this.title="目前共有"+this.parkingLot.length+"个城市停车场"
         })
       },
+      // 抽屉状态改变后执行
       afterVisibleChange(val) {
         console.log('visible', val);
       },
@@ -109,9 +213,14 @@
         this.visible = true;
         this.$message.info("请先选择停车场，再选择停车位")
       },
-      // 点击其他位置触发
+      showDrawer2() {
+        this.selectMyorderList()
+        this.visible3 = true;
+      },
+      // 抽屉，点击其他位置触发
       onClose() {
         this.visible = false;
+        this.visible3 = false;
       },
       //锁定停车位，status 0-->1
       async lockSpcae(){
@@ -126,13 +235,20 @@
           }
         })
       },
+      // 选择停车位进行预定，创建相应订单
       async orderCreate(){
         await this.$axios.post('/api/user/createOrder',{user:this.user,parkingSpace:this.space}).then(res=>{
           if(res.data.data === null || res.data.data === ''){
-            this.$message.warn("订单创建失败！！！")
+            this.$message.warn("订单创建失败！请选择其他停车位")
+            this.visible2=false
+            this.visible=false
             return
           }else {
-            //订单创建成功后倒计时十五分钟再查看车库状态是否变更，未变更则自动完成订单即订单状态 0-->1 车位状态 1-->0
+            this.lockSpcae()
+            this.selectMyorderList()
+            this.visible2=false
+            this.visible=false
+            //订单创建成功后倒计时十五分钟再查看车库状态是否变更，未变更则自动完成订单即订单状态 1-->0 车位状态 1-->0
             setInterval(()=>{
               console.log("取消订单")
             },1000*60*15)
@@ -140,15 +256,24 @@
         })
       },
       //查询订单状态
-      // async selectOrderStatus(){
-      //   await this.$axios.get('/api/user/selectOrderStatus',{params:{lotId:this.space.parkingSpaceId}}).then(res=>{
-      //
-      //   })
-      // }
+      selectMyorderList(){
+         this.$axios.get('/api/user/selectMyorderList',{params:{userId:this.userId}}).then(res=>{
+            this.innerData=res.data.data.filter(item => item.status==1 || item.status==2)
+          for(var i=0;i<this.innerData.length;i++) {
+            if (this.innerData[i].status == 1) {
+              this.innerData[i].status = '已预订'
+            }
+            if (this.innerData[i].status == 2) {
+              this.innerData[i].status = '停车中'
+            }
+          }
+        })
+      }
 
     },
     created() {
       this.selectParkingLot()
+      this.selectMyorderList()
     }
   }
 </script>

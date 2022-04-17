@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "ant-design-vue": "^1.7.8",
     "axios": "^0.26.1",
     "vue": "^2.5.2",

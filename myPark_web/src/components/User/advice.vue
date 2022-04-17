@@ -52,7 +52,7 @@
         writeAdvice:{
           id: null,
           content: '',
-          userId: this.$cookies.get("cid")
+          userId: this.$cookies.get("uid")
         },
         adviceList:[],
         avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',

@@ -5,5 +5,5 @@ import com.yim.pojo.ParkingLot;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface ParkingLotMappr extends BaseMapper<ParkingLot> {
+public interface ParkingLotMapper extends BaseMapper<ParkingLot> {
 }

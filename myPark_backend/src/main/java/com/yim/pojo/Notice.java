@@ -18,7 +18,7 @@ public class Notice {
 
     private String content;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+0")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date time;
     private Integer adminId;
     private Integer status;

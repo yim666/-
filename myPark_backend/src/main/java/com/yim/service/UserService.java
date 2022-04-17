@@ -23,4 +23,16 @@ public interface UserService {
     int createOrder(Order order);
 
     List<Order> selectMyorderList(Integer userId);
+
+    int changeSta(ParkingSpace space, Order order);
+
+    int changeMoney(int fee, Integer userId);
+
+    ParkingSpace selectOneSpace(Integer parkingSpaceId);
+
+    User selectUser(Integer userId);
+
+    int updateUser(User user);
+
+//    List<Map> selectParkingStatus(Integer userId);
 }

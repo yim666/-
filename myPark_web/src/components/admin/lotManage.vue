@@ -10,8 +10,9 @@
       slot-scope="text"
       :columns="innerColumns"
       :data-source="innerData"
+      :pagination="pagination"
     >
-      <span slot="operation" slot-scope="text, record, index" @click="()=>rowSpace=record">
+      <span slot="operation" slot-scope="text, record, index" @mouseover="()=>rowSpace=record">
         <a-dropdown>
           <a-menu slot="overlay" :value="text" @click="changeSta">
             <a-menu-item key="0">
@@ -27,9 +28,12 @@
           <a> changeStatus <a-icon type="down" /> </a>
         </a-dropdown>
         <a-col :span="4"></a-col>
+        <a-popconfirm title="确定要删除这个停车位吗？？？" ok-text="Yes" cancel-text="No" @confirm="deleteSpace">
         <a-button type="danger" size="small" >
         Delete
         </a-button>
+        </a-popconfirm>
+
       </span>
     </a-table>
   </a-table>
@@ -46,7 +50,7 @@
   const innerColumns = [
     { title: '所属停车场', dataIndex: 'parkingLotId', key: 'parkingLotId' ,align:'center'},
     { title: '停车位编号', dataIndex: 'parkingSpaceId', key: 'parkingSpaceId' ,align:'center'},
-    { title: '停车场使用情况', dataIndex: 'status', key: 'status',align:'center' },
+    { title: '停车位使用情况', dataIndex: 'status', key: 'status',align:'center' },
     {
       title: 'Action',
       dataIndex: 'operation',
@@ -65,10 +69,29 @@
         innerColumns,
         innerData:[],
         expandedRowKeys:[],
-        rowSpace:{}
+        rowSpace:{},
+        pagination:{
+          defaultPageSize:3
+        }
       }
     },
     methods:{
+      async deleteSpace(){
+        console.log(this.rowSpace)
+       await this.$axios.delete("/api/admin/deleteSpace",{
+          params:{
+            spaceId:this.rowSpace.parkingSpaceId
+          }
+        }).then(res=>{
+          if(res.data.data === null || res.data.data === ''){
+            this.$message.warn("车位删除失败！！！")
+            return
+          }
+          this.expandedRowKeys=[]
+          this.$message.success("车位删除成功！！！")
+          this.rowSpace={}
+        })
+      },
       changeSta(record){
         console.log(record)
         console.log(this.rowSpace)
@@ -82,6 +105,7 @@
           }
           this.expandedRowKeys=[]
           this.$message.success("车位状态修改成功！！！")
+          this.rowSpace={}
         })
       },
       addSpace(record){

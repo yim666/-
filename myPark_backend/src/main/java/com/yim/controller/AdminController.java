@@ -5,6 +5,7 @@ import com.yim.service.AdminService;
 import com.yim.util.ApiResHandler;
 import com.yim.util.PageRes;
 import com.yim.vo.ApiRes;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,15 +72,29 @@ public class AdminController {
         int i = adminService.addSpace(space);
         return ApiResHandler.succss(i);
     }
-
+    //管理不得随意变更车位状态，会使进行中的订单产生混乱
     @PutMapping("/changeSta")
     public ApiRes changeSta(@RequestBody Map m){
         Integer spaceId = (Integer) m.get("spaceId");
         Integer spaceStatus = Integer.parseInt((String) m.get("spaceStatus")) ;
         ParkingSpace space = new ParkingSpace();
+        Order order = new Order();
         space.setParkingSpaceId(spaceId);
+        order.setParkingSpaceId(spaceId);
         space.setStatus(spaceStatus);
-        int i = adminService.changeSta(space);
+        order.setStatus(spaceStatus);
+        int i = adminService.changeSta(space,order);
+        if (i==2){
+            System.out.println("状态变更为 停车中。。。");
+        }
+        if(i==0){
+            System.out.println("订单已完成，待支付");
+        }
+        return ApiResHandler.succss(i);
+    }
+    @DeleteMapping("/deleteSpace")
+    public ApiRes deleteSpace( Integer spaceId){
+        int i=adminService.deleteSpace(spaceId);
         return ApiResHandler.succss(i);
     }
 

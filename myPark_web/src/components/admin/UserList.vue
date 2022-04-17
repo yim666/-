@@ -67,6 +67,11 @@
       scopedSlots: { customRender: 'carId' },
     },
     {
+      title: '余额',
+      dataIndex: 'money',
+      scopedSlots: { customRender: 'money' },
+    },
+    {
       title: 'Action',
       scopedSlots: { customRender: 'action' },
     }
@@ -138,7 +143,7 @@
 
 <style scoped>
 .mar{
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 7%;
+  margin-right: 7%;
 }
 </style>

@@ -56,7 +56,7 @@
         writeNotice:{
           id: null,
           content: '',
-          adminId: this.$cookies.get("cid")
+          adminId: this.$cookies.get("aid")
         },
         pageInfo:{
           pageSize:3,

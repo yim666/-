@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yim.mapper.OrderMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yim.pojo.Order">
+        <id column="id" property="id" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" javaType="java.util.Date" />
+    </resultMap>
+
+    <select id="updateStatusa" resultType="Map">
+        UPDATE parkorder
+        SET  status=#{status} AND end_time=#{endTime}
+        WHERE parking_space_id=#{parkingSpaceId} AND id=#{id}
+
+    </select>
+
+</mapper>

@@ -107,4 +107,18 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateById(user);
     }
 
+    @Override
+    public int createUser(User user) {
+        int i = userMapper.insert(user);
+        return user.getUserId();
+    }
+
+
+//    用户找回密码，查询当前用户名信息
+    @Override
+    public User forgetPassWord(Integer id) {
+        User user = userMapper.selectById(id);
+        return user;
+    }
+
 }

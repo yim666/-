@@ -46,7 +46,7 @@
       >
         Remember me
       </a-checkbox>
-      <a  href="https://www.baidu.com">
+      <a  @click="forgetPass">
         Forgot password
       </a>
       <br/>
@@ -56,11 +56,80 @@
 
       Or
 
-      <a href="">
+      <a @click="()=>this.visible=true">
         register now!
       </a>
     </a-form-item>
   </a-form>
+
+    <a-modal
+      title="注册账号"
+      :visible="visible"
+      @cancel="handleCancel"
+      footer=''
+    >
+      <a-form :form="registerform" :label-col="{ span: 7 }" :wrapper-col="{ span: 12 }" @submit="registerSubmit">
+        <a-form-item label="用户名">
+          <a-input
+            allow-clear
+            v-decorator=" ['userName',
+            {
+            rules: [{ required: true, message: 'Please input your userName!' }]
+            }
+            ]"
+          />
+        </a-form-item>
+
+
+        <a-form-item label="密码">
+          <a-input-password
+            allow-clear
+            v-decorator=" ['password',
+            {
+            rules: [{ required: true, message: 'Please input your userName!' }]
+            }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="邮箱">
+          <a-input
+            allow-clear
+            v-decorator=" ['email',
+            {
+            rules: [{ required: true, message: 'Please input your email!' }]
+            }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="手机号">
+          <a-input
+            allow-clear
+            v-decorator=" ['phone',
+            {
+            rules: [{ required: true, message: 'Please input your phone!' }]
+            }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="车牌号">
+          <a-input
+            allow-clear
+            v-decorator=" ['carId',
+            {
+            rules: [{ required: true, message: 'Please input your carId!' }]
+            }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item :wrapper-col="{ span: 12, offset: 9 }">
+          <a-button type="primary" html-type="submit">
+            确定更改
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+
   </div>
 </template>
 
@@ -69,13 +138,49 @@
     name: "login",
     beforeCreate() {
       this.form = this.$form.createForm(this, { name: 'normal_login' });
+      this.registerform = this.$form.createForm(this, { name: 'normal_register' });
     },
     data(){
       return{
+        visible:false,
+        visible2:false,
         // value:{}
       }
     },
     methods: {
+      handleCancel(e) {
+        this.visible = false;
+        this.visible2 = false;
+      },
+      registerSubmit(e) {
+        //防止意外提交
+        e.preventDefault();
+        console.log(this.registerform)
+        this.registerform.validateFields((err, values) => {
+          if (!err) {
+            console.log('Received values of form: ', values);
+            this.$axios({
+              url:'/api/user/CreateUser',
+              method:"post",
+              data:values
+            }).then(res=>{
+              if (res.data.data){
+                this.$message.success("注册成功，账号已发送到您的邮箱")
+              }
+            })
+          }
+          this.visible = false;
+        });
+      },
+      forgetPass(){
+        this.form.validateFields((err, values) => {
+          console.log(values)
+            this.$axios.get('/api/user/forgetPassWord',{params:{id:values.userName}}).then(res=>{
+              console.log(res)
+              this.$message.success("您的密码已找回，请在邮箱"+res.data.data.email+"查收")
+            })
+        })
+      },
       handleSubmit(e) {
         e.preventDefault();
         this.form.validateFields((err, values) => {

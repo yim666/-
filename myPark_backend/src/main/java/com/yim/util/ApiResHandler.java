@@ -4,7 +4,7 @@ import com.yim.vo.ApiRes;
 
 public class ApiResHandler {
 
-    public static ApiRes succss(Object o){
+    public static ApiRes success(Object o){
         ApiRes apiRes = new ApiRes();
         apiRes.setCode(200);
         apiRes.setMessage("请求成功！！");
@@ -13,7 +13,7 @@ public class ApiResHandler {
     }
 
     public static ApiRes success(){
-        return succss(null);
+        return success(null);
     }
 
     public static ApiRes fail(){
@@ -31,4 +31,6 @@ public class ApiResHandler {
         apiRes.setMessage(message);
         return apiRes;
     }
+
+
 }

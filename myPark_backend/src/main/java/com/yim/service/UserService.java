@@ -34,5 +34,9 @@ public interface UserService {
 
     int updateUser(User user);
 
+    int createUser(User user);
+
+    User forgetPassWord(Integer id);
+
 //    List<Map> selectParkingStatus(Integer userId);
 }

@@ -16,7 +16,7 @@
           <a-menu slot="overlay">
             <a-menu-item>
               您好，
-              <span style="color: red">{{cname}}</span>
+              <span style="color: red">{{uname}}</span>
             </a-menu-item>
             <a-menu-item >
               <a-popconfirm
@@ -72,7 +72,7 @@
     components: {Info,Notice,Advice,OrderSpace,OrderHistory,MyMap},
     data(){
       return{
-        cname: this.$cookies.get("cname"),
+        uname: this.$cookies.get("uname"),
         time: ''
       }
     },

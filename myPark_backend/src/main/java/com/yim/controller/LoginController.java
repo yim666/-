@@ -5,6 +5,7 @@ import com.yim.pojo.Login;
 import com.yim.pojo.User;
 import com.yim.service.LoginService;
 import com.yim.util.ApiResHandler;
+import com.yim.util.MailClient;
 import com.yim.vo.ApiRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private MailClient mailClient;
+
 //    @RequestMapping(value = "/login" ,method = RequestMethod.POST)
     @PostMapping("/login")
     public ApiRes login(@RequestBody Login login){
@@ -24,15 +28,23 @@ public class LoginController {
 //        权限为管理
         if (role==1){
             Admin admin = loginService.adminLogin(userName, password);
-            return ApiResHandler.succss(admin);
+            return ApiResHandler.success(admin);
         }
         //权限为用户
         if(role==2){
             User user = loginService.userLogin(userName, password);
-            return ApiResHandler.succss(user);
+            return ApiResHandler.success(user);
         }
         return ApiResHandler.fail();
     }
+
+    @RequestMapping("/sendEmail")
+    public ApiRes testTextMail(String email) {
+        mailClient.sendMail(email, "注册", "恭喜您注册成功！");
+        return ApiResHandler.success();
+    }
+
+
 
 }
 

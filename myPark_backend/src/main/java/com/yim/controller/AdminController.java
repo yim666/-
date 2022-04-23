@@ -21,19 +21,19 @@ public class AdminController {
     @GetMapping("/selectUserList")
     public ApiRes selectUserList(){
         List<User> users = adminService.selectUserList();
-        return ApiResHandler.succss(users);
+        return ApiResHandler.success(users);
     }
 
     @PutMapping("/updateUserList")
     public ApiRes updateUserList(@RequestBody User user){
         int i = adminService.updateUserList(user);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
 
     @GetMapping("/selectNoticeList")
     public ApiRes selectNotice(PageRes pageRes){
         PageRes p = adminService.selectNotice(pageRes);
-        return ApiResHandler.succss(p);
+        return ApiResHandler.success(p);
     }
 
     @PostMapping("/createNotice")
@@ -42,25 +42,25 @@ public class AdminController {
 //        notice.setId(10);
         notice.setStatus(null);
         int i = adminService.createNotice(notice);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
 
     @GetMapping("/selectAdviceList")
     public ApiRes selectAdviceList(){
         List<Advice> advice = adminService.selectAdviceList();
-        return ApiResHandler.succss(advice);
+        return ApiResHandler.success(advice);
     }
 
     @GetMapping("/selectOrderList")
     public ApiRes selectOrderList(){
         List<Order> Order = adminService.selectOrderList();
-        return ApiResHandler.succss(Order);
+        return ApiResHandler.success(Order);
     }
 
     @GetMapping("/selectParkingSpace")
     public ApiRes selectParkingSpace(Integer lotId){
         List<ParkingSpace> spaces = adminService.selectParkingSpace(lotId);
-        return ApiResHandler.succss(spaces);
+        return ApiResHandler.success(spaces);
     }
 
     @PostMapping("/addSpace")
@@ -70,7 +70,7 @@ public class AdminController {
         space.setParkingLotId(id);
         space.setStatus(0);
         int i = adminService.addSpace(space);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
     //管理不得随意变更车位状态，会使进行中的订单产生混乱
     @PutMapping("/changeSta")
@@ -90,12 +90,12 @@ public class AdminController {
         if(i==0){
             System.out.println("订单已完成，待支付");
         }
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
     @DeleteMapping("/deleteSpace")
     public ApiRes deleteSpace( Integer spaceId){
         int i=adminService.deleteSpace(spaceId);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
 
 }

@@ -4,6 +4,7 @@ import com.yim.pojo.*;
 import com.yim.service.UserService;
 import com.yim.util.ApiResHandler;
 import com.yim.util.DateTimeUtils;
+import com.yim.util.MailClient;
 import com.yim.vo.ApiRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,62 +22,82 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private MailClient mailClient;
+
+    @PostMapping("/CreateUser")
+    public ApiRes createUser(@RequestBody User user){
+        int userId = userService.createUser(user);
+        String email = user.getEmail();
+        mailClient.sendMail(email, "注册", "恭喜您注册成功！您的账号为："+ userId);
+        return ApiResHandler.success(userId);
+    }
 
     @GetMapping("/selectNoticeList")
     public ApiRes selectNoticeList(){
         List<Notice> notices = userService.selectNoticeList();
-        return ApiResHandler.succss(notices);
+        return ApiResHandler.success(notices);
     }
 
     @GetMapping("/selectUser")
     public ApiRes selectUser(Integer id){
         User u= userService.selectUser(id);
-        return ApiResHandler.succss(u);
+        return ApiResHandler.success(u);
+    }
+
+    @GetMapping("/forgetPassWord")
+    public ApiRes forgetPassWord(Integer id){
+        User u= userService.forgetPassWord(id);
+        String password = u.getPassword();
+        String email = u.getEmail();
+        mailClient.sendMail(email, "密码找回", "您当前账号的密码为："+ password);
+        return ApiResHandler.success(email);
     }
 
     @GetMapping("/selectMyAdvice")
     public ApiRes selectMyAdvice( Integer id){
 //        Integer i = Integer.valueOf(id);
         List<Advice> advice = userService.selectMyAdvice(id);
-        return ApiResHandler.succss(advice);
+        return ApiResHandler.success(advice);
     }
 
     @PostMapping("/createAdvice")
     public ApiRes createAdvice(@RequestBody Advice advice){
         advice.setTime(null);
         int i = userService.createAdvice(advice);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
+
 
     @GetMapping("/selectParkingLot")
     public ApiRes selectParkingLot(){
         List<ParkingLot> lots = userService.selectParkingLot();
-        return ApiResHandler.succss(lots);
+        return ApiResHandler.success(lots);
     }
 
     //查询可使用的停车位
     @GetMapping("/selectParkingSpace")
     public ApiRes selectParkingSpace(Integer lotId){
         List<ParkingSpace> spaces = userService.selectParkingSpace(lotId);
-        return ApiResHandler.succss(spaces);
+        return ApiResHandler.success(spaces);
     }
     //查询当前用户进行中的订单
 //    @GetMapping("/selectParkingStatus")
 //    public ApiRes selectParkingStatus(Integer userId){
 //        List<Map> orders = userService.selectParkingStatus(userId);
-//        return ApiResHandler.succss(orders);
+//        return ApiResHandler.success(orders);
 //    }
 
     @PutMapping("/updateSpaceStatus")
     public ApiRes updateSpaceStatus(@RequestBody ParkingSpace space){
         int i = userService.updateSpaceStatus(space);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
 
     @PutMapping("/updateUser")
     public ApiRes updateUser(@RequestBody User user){
         int i = userService.updateUser(user);
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
 
     @PostMapping("/createOrder")
@@ -95,7 +116,7 @@ public class UserController {
             order.setFee(null);
             order.setStatus(1);
             int i = userService.createOrder(order);
-            return ApiResHandler.succss(i);
+            return ApiResHandler.success(i);
         }else {
             return ApiResHandler.fail();
         }
@@ -105,7 +126,7 @@ public class UserController {
     @GetMapping("/selectMyorderList")
     public ApiRes selectMyorderList(Integer userId){
         List<Order> Myorder = userService.selectMyorderList(userId);
-        return ApiResHandler.succss(Myorder);
+        return ApiResHandler.success(Myorder);
     }
 
     @PutMapping("/changeSta")
@@ -140,6 +161,6 @@ public class UserController {
         if (i==2){
             System.out.println("状态变更为 停车中。。。");
         }
-        return ApiResHandler.succss(i);
+        return ApiResHandler.success(i);
     }
 }

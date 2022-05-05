@@ -19,7 +19,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public User userLogin(String userName, String password) {
         QueryWrapper<User> qw = new QueryWrapper();
-        qw.eq("user_id", userName).eq("password", password);
+        qw.eq("user_id", userName);
         User user =  userMapper.selectOne(qw);
         return user;
     }
@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Admin adminLogin(String userName, String password) {
         QueryWrapper<Admin> qw = new QueryWrapper();
-        qw.eq("admin_id", userName).eq("password", password);
+        qw.eq("admin_id", userName);
         Admin admin = adminMapper.selectOne(qw);
         return admin;
     }

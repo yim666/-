@@ -248,9 +248,37 @@
             this.selectMyorderList()
             this.visible2=false
             this.visible=false
+            var myDate = this.getNowFormatDate()
+            console.log(myDate)
+
+            // var date = new Date();
+            // var time1 = date.toLocaleTimeString();
+            // console.log(date)
+            var spaceId =this.space.parkingSpaceId
+            var orderId=res.data.data
             //订单创建成功后倒计时十五分钟再查看车库状态是否变更，未变更则自动完成订单即订单状态 1-->0 车位状态 1-->0
-            setInterval(()=>{
-              console.log("取消订单")
+            var time = window.setTimeout(()=>{
+              this.$axios.get("api/user/selectOrderSpace",{params:{spaceId:spaceId}}).then(res=> {
+                  if(res.data.data == 1){
+
+                    this.$axios.put('/api/user/changeSta',{
+                      spaceStatus: '0',
+                      spaceId:this.space.parkingSpaceId,
+                      id: orderId,
+                      createTime:myDate,
+                      userId:this.$cookies.get("uid")
+                    }).then(res=>{
+                      if(res.data.data === null || res.data.data === ''){
+                        this.$message.warn("车位状态修改失败！！！")
+                        return
+                      }
+                      this.$message.warn("15分钟未到指定地点，已取消订单")
+                      this.selectMyorderList()
+                    })
+                  }
+              })
+              // window.clearTimeout(time) //去除定时器
+
             },1000*60*15)
           }
         })
@@ -268,6 +296,23 @@
             }
           }
         })
+      },
+      getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        var time = date.toLocaleTimeString();
+        console.log(time)
+        if (month >= 1 && month <= 9) {
+          month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+          strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate+' '+time;
+        return currentdate;
       }
 
     },

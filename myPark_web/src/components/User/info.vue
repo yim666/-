@@ -66,7 +66,7 @@
           <a-input-password
             allow-clear
             v-decorator=" ['password',
-            { initialValue:user.password,
+            {
             rules: [{ required: true, message: 'Please input your userName!' }]
             }
             ]"
@@ -77,7 +77,9 @@
             allow-clear
             v-decorator=" ['email',
             { initialValue:user.email,
-            rules: [{ required: true, message: 'Please input your email!' }]
+            rules: [{ required: true, message: 'Please input your email!' },
+            {pattern:/^\w+@[a-z0-9]+.[a-z]{2,4}$/,
+            message: '请输入正确的邮箱！'}]
             }
             ]"
           />
@@ -87,7 +89,8 @@
             allow-clear
             v-decorator=" ['phone',
             { initialValue:user.phone,
-            rules: [{ required: true, message: 'Please input your phone!' }]
+            rules: [{ required: true, message: 'Please input your phone!' },
+            { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号码!'}]
             }
             ]"
           />
@@ -97,7 +100,11 @@
             allow-clear
             v-decorator=" ['carId',
             { initialValue:user.carId,
-            rules: [{ required: true, message: 'Please input your carId!' }]
+            rules: [{ required: true, message: 'Please input your carId!' },
+            {
+              pattern:/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/,
+              message: '请输入正确的车牌号！'
+            }]
             }
             ]"
           />

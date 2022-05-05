@@ -38,5 +38,7 @@ public interface UserService {
 
     User forgetPassWord(Integer id);
 
+    ParkingSpace selectOrderSpace(Integer spaceId);
+
 //    List<Map> selectParkingStatus(Integer userId);
 }

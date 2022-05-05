@@ -65,7 +65,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int createOrder(Order order) {
-        return orderMapper.insertOrder(order);
+        int i = orderMapper.insert(order);
+        return order.getId();
     }
 
     @Override
@@ -119,6 +120,12 @@ public class UserServiceImpl implements UserService {
     public User forgetPassWord(Integer id) {
         User user = userMapper.selectById(id);
         return user;
+    }
+
+    @Override
+    public ParkingSpace selectOrderSpace(Integer spaceId) {
+        ParkingSpace parkingSpace = parkingSpaceMapper.selectById(spaceId);
+        return parkingSpace;
     }
 
 }

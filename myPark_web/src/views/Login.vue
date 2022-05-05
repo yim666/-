@@ -96,7 +96,9 @@
             allow-clear
             v-decorator=" ['email',
             {
-            rules: [{ required: true, message: 'Please input your email!' }]
+            rules: [{ required: true, message: 'Please input your email!' },
+            {pattern:/^\w+@[a-z0-9]+.[a-z]{2,4}$/,
+            message: '请输入正确的邮箱！'}]
             }
             ]"
           />
@@ -106,7 +108,8 @@
             allow-clear
             v-decorator=" ['phone',
             {
-            rules: [{ required: true, message: 'Please input your phone!' }]
+            rules: [{ required: true, message: 'Please input your phone!' },
+            { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号码!'}]
             }
             ]"
           />
@@ -116,7 +119,11 @@
             allow-clear
             v-decorator=" ['carId',
             {
-            rules: [{ required: true, message: 'Please input your carId!' }]
+            rules: [{ required: true, message: 'Please input your carId!' },
+            {
+              pattern:/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/,
+              message: '请输入正确的车牌号！'
+            }]
             }
             ]"
           />
@@ -174,11 +181,18 @@
       },
       forgetPass(){
         this.form.validateFields((err, values) => {
+          console.log(err)
           console.log(values)
-            this.$axios.get('/api/user/forgetPassWord',{params:{id:values.userName}}).then(res=>{
+          if (values.userName ==undefined||values.userName=='') {
+            this.$message.error("请输入账号以发送邮件找回密码")
+            return
+          }
+          {
+            this.$axios.get('/api/user/forgetPassWord', {params: {id: values.userName}}).then(res => {debugger
               console.log(res)
-              this.$message.success("您的密码已找回，请在邮箱"+res.data.data.email+"查收")
+              this.$message.success("您的密码已找回，请在邮箱" + res.data.data + "查收")
             })
+          }
         })
       },
       handleSubmit(e) {

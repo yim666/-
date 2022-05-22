@@ -73,6 +73,10 @@
       onChange(date, dateString){
         console.log(date, dateString);
         this.SelectOrder.dateRange=dateString
+        if(date.length==0){
+          this.selectMyorderList()
+          return
+        }
         this.$axios({
           url:'/api/user/selectMyorderListByDate',
           method:"post",

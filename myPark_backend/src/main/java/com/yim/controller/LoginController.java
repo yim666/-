@@ -23,12 +23,11 @@ public class LoginController {
 //    @RequestMapping(value = "/login" ,method = RequestMethod.POST)
     @PostMapping("/login")
     public ApiRes login(@RequestBody Login login){
-        String userName = login.getUserName();
+        Integer userName = login.getUserName();
         String password = login.getPassword();
-        int role = userName.charAt(0)-'0';
+        int role = userName.toString().charAt(0)-'0';
         //spring提供的盐值加密
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
         String pass = encoder.encode(password);
 //        权限为管理
         if (role==1){
@@ -49,7 +48,6 @@ public class LoginController {
             }else {
                 return ApiResHandler.fail();
             }
-
         }
         return ApiResHandler.fail();
     }

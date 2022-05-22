@@ -22,6 +22,7 @@ public class Order {
     private Integer id;
     private Integer userId;
     private Integer parkingSpaceId;
+    private String parkingLotName;
     private String carId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;

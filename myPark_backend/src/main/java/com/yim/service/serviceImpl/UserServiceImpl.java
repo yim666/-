@@ -7,6 +7,7 @@ import com.yim.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -126,6 +127,22 @@ public class UserServiceImpl implements UserService {
     public ParkingSpace selectOrderSpace(Integer spaceId) {
         ParkingSpace parkingSpace = parkingSpaceMapper.selectById(spaceId);
         return parkingSpace;
+    }
+
+    @Override
+    public List<Order> selectMyorderListByDate(Integer userId, Date date1, Date date2) {
+        QueryWrapper<Order> qw = new QueryWrapper<>();
+        if(userId==0){
+            qw.ge("create_time", date1).le("end_time", date2).orderByDesc("end_time");
+        }else {
+            qw.eq("user_id", userId).ge("create_time", date1).le("end_time", date2).orderByDesc("end_time");
+        }
+        return orderMapper.selectList(qw);
+    }
+
+    @Override
+    public ParkingLot selectOneParkingLot(Integer parkingLotId) {
+        return parkingLotMapper.selectById(parkingLotId);
     }
 
 }

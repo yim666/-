@@ -57,7 +57,7 @@
         adviceList:[],
         avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
         pagination:{
-          pageSize:2
+          pageSize:3
         }
       }
     },

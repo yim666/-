@@ -6,7 +6,7 @@ import com.yim.pojo.User;
 
 public interface LoginService {
 
-    User userLogin(String userName, String password);
+    User userLogin(Integer userName, String password);
 
-    Admin adminLogin(String userName, String password);
+    Admin adminLogin(Integer userName, String password);
 }

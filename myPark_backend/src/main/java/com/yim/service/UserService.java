@@ -3,6 +3,7 @@ package com.yim.service;
 
 import com.yim.pojo.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -39,6 +40,10 @@ public interface UserService {
     User forgetPassWord(Integer id);
 
     ParkingSpace selectOrderSpace(Integer spaceId);
+
+    List<Order> selectMyorderListByDate(Integer userId, Date date1, Date date2);
+
+    ParkingLot selectOneParkingLot(Integer parkingLotId);
 
 //    List<Map> selectParkingStatus(Integer userId);
 }

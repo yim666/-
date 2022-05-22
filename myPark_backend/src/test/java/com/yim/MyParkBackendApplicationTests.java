@@ -1,9 +1,15 @@
 package com.yim;
 
+import com.yim.pojo.Admin;
 import com.yim.pojo.Notice;
+import com.yim.pojo.User;
+import com.yim.service.LoginService;
+import com.yim.util.ApiResHandler;
 import com.yim.util.DateTimeUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -14,20 +20,23 @@ import java.util.Date;
 
 @SpringBootTest
 class MyParkBackendApplicationTests {
-
+    @Autowired
+    private LoginService loginService;
     @Test
-    void contextLoads() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = formatter.format(currentTime);
-        try {
-            Date parse = formatter.parse(dateString);
-            System.out.println(parse);
-            Notice notice = new Notice();
-            notice.setTime(parse);
-            System.out.println(notice.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
+    void loginTest() {
+        User user = new User();
+        user.setUserId(2001);
+        user.setPassword("12");
+        //spring提供的盐值加密
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String pass = encoder.encode(user.getPassword());
+        //权限为用户
+            User user2 = loginService.userLogin(user.getUserId(), pass);
+            boolean matches = encoder.matches(user.getPassword(), user2.getPassword());
+            if((user2 !=null) && matches){
+                System.out.println(user2);
+            }else {
+                System.out.println("登录失败，用户或密码错误！！！");
         }
     }
 

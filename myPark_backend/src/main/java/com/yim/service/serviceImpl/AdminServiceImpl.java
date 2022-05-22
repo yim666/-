@@ -28,6 +28,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private ParkingSpaceMapper parkingSpaceMapper;
+    @Autowired
+    private ParkingLotMapper parkingLotMapper;
+
     @Override
     public List<User> selectUserList() {
 
@@ -96,5 +99,22 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public int deleteSpace(Integer id) {
         return parkingSpaceMapper.deleteById(id);
+    }
+
+    @Override
+    public List<Order> selectOrderListByCarId(String carId) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("car_id", carId);
+        return orderMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public int addLot(ParkingLot lot) {
+        return parkingLotMapper.insert(lot);
+    }
+
+    @Override
+    public int deleteLot(Integer lotId) {
+        return parkingLotMapper.deleteById(lotId);
     }
 }

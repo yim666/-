@@ -25,4 +25,10 @@ public interface AdminService {
     int changeSta(ParkingSpace space, Order order);
 
     int deleteSpace(Integer id);
+
+    List<Order> selectOrderListByCarId(String carId);
+
+    int addLot(ParkingLot lot);
+
+    int deleteLot(Integer lotId);
 }

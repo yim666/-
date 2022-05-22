@@ -57,6 +57,12 @@ public class AdminController {
         return ApiResHandler.success(Order);
     }
 
+    @GetMapping("/selectOrderListByCarId")
+    public ApiRes selectOrderListByCarId(String carId){
+        List<Order> Order = adminService.selectOrderListByCarId(carId);
+        return ApiResHandler.success(Order);
+    }
+
     @GetMapping("/selectParkingSpace")
     public ApiRes selectParkingSpace(Integer lotId){
         List<ParkingSpace> spaces = adminService.selectParkingSpace(lotId);
@@ -70,6 +76,17 @@ public class AdminController {
         space.setParkingLotId(id);
         space.setStatus(0);
         int i = adminService.addSpace(space);
+        return ApiResHandler.success(i);
+    }
+
+    @PostMapping("/addLot")
+    public ApiRes addLot(@RequestBody Map map){
+        String name = (String) map.get("lotName");
+        ParkingSpace space = new ParkingSpace();
+        ParkingLot lot = new ParkingLot();
+        lot.setParkingLotName(name);
+        lot.setStatus(0);
+        int i = adminService.addLot(lot);
         return ApiResHandler.success(i);
     }
     //管理不得随意变更车位状态，会使进行中的订单产生混乱
@@ -95,6 +112,11 @@ public class AdminController {
     @DeleteMapping("/deleteSpace")
     public ApiRes deleteSpace( Integer spaceId){
         int i=adminService.deleteSpace(spaceId);
+        return ApiResHandler.success(i);
+    }
+    @DeleteMapping("/deleteLot")
+    public ApiRes deleteLot( Integer lotId){
+        int i=adminService.deleteLot(lotId);
         return ApiResHandler.success(i);
     }
 

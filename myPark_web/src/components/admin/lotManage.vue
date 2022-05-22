@@ -1,10 +1,23 @@
 <template>
+  <div>
+    <a-input-group compact style="width: 400px;margin-left: 35%">
+      <a-input v-model="addLotName" placeholder="请输入停车场名称" style="width: calc(100% - 200px)" />
+      <a-button type="primary" @click="addLot">addLot</a-button>
+    </a-input-group>
   <a-table :columns="columns" :data-source="data" style="margin-right:15%;margin-left:15% "
            :rowKey="record => record.ParkingLotId" @expand="expand"  expandRowByClick
            @expandedRowsChange="expandedRowsChange"
            :expandedRowKeys="expandedRowKeys"
            :pagination="false">
-    <a slot="operation" slot-scope="text, record, index" @click="addSpace(record) ">addSpace</a>
+    <span slot="operation" slot-scope="text, record, index" >
+      <a-button type="primary" size="small" @click="addSpace(record)">
+       addSpace
+      </a-button>
+      <a-button type="danger" size="small" @click="deleteLot(record)">
+       deleteLot
+      </a-button>
+    </span>
+<!--    <a slot="operation" slot-scope="text, record, index" @click="addSpace(record) ">delete</a>-->
     <a-table
       slot="expandedRowRender"
       slot-scope="text"
@@ -37,6 +50,7 @@
       </span>
     </a-table>
   </a-table>
+  </div>
 </template>
 
 <script>
@@ -72,10 +86,22 @@
         rowSpace:{},
         pagination:{
           defaultPageSize:3
-        }
+        },
+        addLotName:''
       }
     },
     methods:{
+      addLot(){
+        this.$axios.post('/api/admin/addLot',{lotName:this.addLotName}).then(res=>{
+          if(res.data.data === null || res.data.data === ''){
+            this.$message.warn("增加停车场失败！！！")
+            return
+          }
+          this.selectParkingLot()
+          this.$message.success("增加停车场成功！！！")
+          this.addLotName=''
+        })
+      },
       async deleteSpace(){
         console.log(this.rowSpace)
        await this.$axios.delete("/api/admin/deleteSpace",{
@@ -118,6 +144,23 @@
           }
           this.selectParkingLot()
           this.$message.success("增加停车位成功！！！")
+        })
+      },
+      deleteLot(record){
+        // var lotId=record.parkingLotId
+         this.$axios.delete("/api/admin/deleteLot",{
+          params:{
+            lotId:record.parkingLotId
+          }
+        }).then(res=>{
+          if(res.data.data === null || res.data.data === ''){
+            this.$message.warn("停车场删除失败！！！")
+            return
+          }
+          this.expandedRowKeys=[]
+          this.$message.success("停车场删除成功！！！")
+          this.rowSpace={}
+          this.selectParkingLot()
         })
       },
       selectParkingLot() {

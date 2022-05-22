@@ -130,7 +130,7 @@
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 9 }">
           <a-button type="primary" html-type="submit">
-            确定更改
+            注册
           </a-button>
         </a-form-item>
       </a-form>

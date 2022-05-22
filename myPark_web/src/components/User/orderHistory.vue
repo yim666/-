@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div>
+      订单日期: <a-range-picker @change="onChange"  allowClear/>
+      <a-button @click="selectMyorderList" type="primary">sellectAll</a-button>
+    </div>
   <a-table  :data-source="this.myOrderList" :columns="columns" bordered
             style="margin-right:15%;margin-left:15% "
             :pagination="pagination" hideOnSinglePage>
@@ -17,6 +21,11 @@
     {
       title: '停车位',
       dataIndex: 'parkingSpaceId',
+      align:'center'
+    },
+    {
+      title: '停车场',
+      dataIndex: 'parkingLotName',
       align:'center'
     },
     {
@@ -53,10 +62,33 @@
         pagination:{
           pageSize:8,
           hideOnSinglePage:true
+        },
+        SelectOrder:{
+          userId:this.$cookies.get("uid"),
+          dateRange:[]
         }
       }
     },
     methods:{
+      onChange(date, dateString){
+        console.log(date, dateString);
+        this.SelectOrder.dateRange=dateString
+        this.$axios({
+          url:'/api/user/selectMyorderListByDate',
+          method:"post",
+          data:this.SelectOrder
+        }).then(res=>{
+          this.myOrderList=res.data.data
+          for(var i=0;i<this.myOrderList.length;i++){
+            if(this.myOrderList[i].status==0){
+              this.myOrderList[i].status='订单已完成'
+            }
+            if(this.myOrderList[i].status==1 || this.myOrderList[i].status==2){
+              this.myOrderList[i].status='订单进行中'
+            }
+          }
+        })
+      },
       async selectMyorderList(){
         await this.$axios.get('/api/user/selectMyorderList',{params:{userId:this.userId}}).then(res=>{
           this.myOrderList=res.data.data
@@ -70,16 +102,16 @@
            }
         })
       },
-      thisTime(){
-        // 实现局部刷新
-        setInterval(()=>{
-          this.selectMyorderList()
-        },5000)
-      }
+      // thisTime(){
+      //   // 实现局部刷新
+      //   setInterval(()=>{
+      //     this.selectMyorderList()
+      //   },5000)
+      // }
     },
     mounted() {
       this.selectMyorderList()
-      this.thisTime()
+      // this.thisTime()
     }
   }
 </script>

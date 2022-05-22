@@ -30,7 +30,7 @@
         moment,
         noticeList:[],
         pagination:{
-          pageSize:2
+          pageSize:3
         }
       };
     },

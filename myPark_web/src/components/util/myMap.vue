@@ -42,17 +42,20 @@
 
           //初始标记地点
           var marker1 = new AMap.Marker({
-            position: new AMap.LngLat(120.613551,31.343999),
+            //苏州站
+            position: new AMap.LngLat(120.612251,31.328999),
             offset: new AMap.Pixel(-10, -10),
             zoom: 8
           })
           var marker2 = new AMap.Marker({
+            //苏州中心
             position: new AMap.LngLat(120.6799,31.3159),
             offset: new AMap.Pixel(-10, -10),
             zoom: 8
           })
           var marker3 = new AMap.Marker({
-            position: new AMap.LngLat(120.3810,31.163),
+            // 苏大
+            position: new AMap.LngLat(120.64250,31.3035),
             offset: new AMap.Pixel(-10, -10),
             zoom: 8
           })

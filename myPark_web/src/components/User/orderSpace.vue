@@ -98,6 +98,11 @@
       align:'center'
     },
     {
+      title: '停车场',
+      dataIndex: 'parkingLotName',
+      align:'center'
+    },
+    {
       title: '车牌号',
       dataIndex: 'carId',
       align:'center'
@@ -162,6 +167,7 @@
       //修改车位状态和订单状态
       changeSta(record){
         console.log(this.rowSpace)
+        console.log(record)
         this.$axios.put('/api/user/changeSta',{
           spaceStatus:record.key,
           spaceId:this.rowSpace.parkingSpaceId,
@@ -277,8 +283,6 @@
                     })
                   }
               })
-              // window.clearTimeout(time) //去除定时器
-
             },1000*60*15)
           }
         })

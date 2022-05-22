@@ -16,10 +16,7 @@ import org.thymeleaf.context.Context;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -48,6 +45,7 @@ public class UserController {
         user.setPassword(pass);
         int userId = userService.createUser(user);
         String email = user.getEmail();
+        //创建完成发送用户ID到用户邮箱
         mailClient.sendMail(email, "注册", "恭喜您注册成功！您的账号为："+ userId);
         return ApiResHandler.success(userId);
     }
@@ -66,10 +64,6 @@ public class UserController {
 
     @GetMapping("/forgetPassWord")
     public ApiRes forgetPassWord(Integer id){
-//        User u= userService.forgetPassWord(id);
-//        String password = u.getPassword();
-//        String email = u.getEmail();
-//        mailClient.sendMail(email, "密码找回", "您当前账号的密码为："+ password);
         // 发送激活邮件
 //        Context是thymeleaf的类，用来给模板引擎传值
         User user= userService.selectUser(id);
@@ -174,9 +168,11 @@ public class UserController {
 //        确定车位状态是否可以预定
         ParkingSpace space1 = userService.selectOneSpace(parkingSpaceId);
         if (space1.getStatus()==0) {
+            ParkingLot lot=userService.selectOneParkingLot(space1.getParkingLotId());
             Order order = new Order();
             order.setUserId((Integer) user.get("userId"));
             order.setParkingSpaceId(parkingSpaceId);
+            order.setParkingLotName(lot.getParkingLotName());
             order.setCarId((String) user.get("carId"));
             order.setCreateTime(null);
             order.setFee(null);
@@ -192,6 +188,19 @@ public class UserController {
     @GetMapping("/selectMyorderList")
     public ApiRes selectMyorderList(Integer userId){
         List<Order> Myorder = userService.selectMyorderList(userId);
+        return ApiResHandler.success(Myorder);
+    }
+    @PostMapping("/selectMyorderListByDate")
+    public ApiRes selectMyorderListByDate(@RequestBody Map SelectOrder) throws ParseException {
+        String userIdd = (String) SelectOrder.get("userId");
+        Integer userId= Integer.valueOf(userIdd);
+        ArrayList dateRange = (ArrayList) SelectOrder.get("dateRange");
+        String from =  dateRange.get(0)  + " 00:00:00";
+        String to =   dateRange.get(1) + " 23:59:59";
+        Date date1 = DateTimeUtils.StringToDate(from);
+        Date date2 = DateTimeUtils.StringToDate(to);
+
+        List<Order> Myorder = userService.selectMyorderListByDate(userId,date1,date2);
         return ApiResHandler.success(Myorder);
     }
 
@@ -221,7 +230,7 @@ public class UserController {
             order.setFee(fee);
             int j=userService.changeMoney(fee,userId);
             System.out.println(date);
-            System.out.println("订单已完成，待支付");
+            System.out.println(spaceId+"订单已完成，待支付");
         }
         int i = userService.changeSta(space,order);
         if (i==2){

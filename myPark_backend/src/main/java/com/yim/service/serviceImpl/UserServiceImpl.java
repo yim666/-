@@ -145,4 +145,10 @@ public class UserServiceImpl implements UserService {
         return parkingLotMapper.selectById(parkingLotId);
     }
 
+    @Override
+    public int updateUserMoney(User user) {
+        return userMapper.updateById(user);
+    }
+
+
 }

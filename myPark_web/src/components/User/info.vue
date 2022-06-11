@@ -118,11 +118,24 @@
     </a-modal>
 
     <a-modal
-      title="充值二维码"
+      title="充值"
       :visible="visible2"
       @cancel="handleCancel"
-      footer=''
+      @ok="moneyOk"
     >
+      <a-row>
+        <a-col :span="11" align="right" style="margin-top: 4px" >
+          <a-icon type="money-collect" /> <a-text>请输入需要充值的金额:</a-text>
+        </a-col>
+        <a-col :span="1"></a-col>
+        <a-col :span="12">
+          <a-input-number prefix="￥" suffix="" v-model="sumMoney"
+                          :min="10" :max="500"
+                          style="width: 150px"
+          />
+        </a-col>
+      </a-row>
+
     </a-modal>
     <a-modal
       title="充值二维码"
@@ -149,10 +162,28 @@
         visible3:false,
         confirmLoading:false,
         formLayout: 'horizontal',
+        sumMoney: 10,
         // form:{}
       }
     },
     methods:{
+      moneyOk(){
+        var addMoney={
+          userId:this.$cookies.get("uid"),
+          money:this.sumMoney
+        }
+        this.$axios({
+          url:'/api/user/updateUserMoney',
+          method:"put",
+          data:addMoney
+        }).then(res=>{
+          if (res.data.data){
+            this.$message.success("充值成功")
+            this.selectUser()
+            this.visible2=false
+          }
+        })
+      },
         selectUser(){
           this.$axios.get('/api/user/selectUser',{params:{id:this.userId}}).then(res=>{
               this.user=res.data.data
@@ -183,9 +214,17 @@
           this.visible = false;
         });
       },
+      thisTime(){
+        // 实现局部刷新
+        setInterval(()=>{
+          this.selectUser()
+        },5000)
+      }
     },
+
     created() {
       this.selectUser()
+      this.thisTime()
     },
     mounted() {
       console.log(this.user)

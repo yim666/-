@@ -82,7 +82,8 @@
       },
       resetForm(){
         this.content=''
-      }
+      },
+
     },
     created() {
       this.selectMyAdvice()

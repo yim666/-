@@ -62,7 +62,7 @@
         :data-source="this.innerData"
         :pagination="false"
       >
-      <span slot="operation" slot-scope="text, record, index" @click="()=>rowSpace=record">
+      <span slot="operation" slot-scope="text, record, index" @mouseover="()=>rowSpace=record">
         <a-dropdown>
           <a-menu slot="overlay" :value="text" @click="changeSta">
             <a-menu-item key="2">

@@ -19,7 +19,7 @@
     <div>
       <br/>
       <a-input prefix="￥" suffix="" v-model="sumMoney" autosize disabled
-      style="width: 7%;margin-left:42%"/>
+      style="width: 6%;margin-left:50%"/>
     </div>
   <a-table  :data-source="this.orderList" :columns="columns" bordered
             style="margin-right:15%;margin-left:15% "

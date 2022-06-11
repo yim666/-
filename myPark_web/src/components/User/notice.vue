@@ -40,10 +40,17 @@
           this.$axios.get('/api/user/selectNoticeList').then(res=>{
             this.noticeList=res.data.data
           })
-        }
+        },
+      thisTime(){
+        // 实现局部刷新
+        setInterval(()=>{
+          this.selectNotice()
+        },5000)
+      }
     },
     created() {
       this.selectNotice()
+      this.thisTime()
     }
   }
 </script>

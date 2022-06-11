@@ -22,23 +22,23 @@ import java.util.Date;
 class MyParkBackendApplicationTests {
     @Autowired
     private LoginService loginService;
-    @Test
-    void loginTest() {
-        User user = new User();
-        user.setUserId(2001);
-        user.setPassword("12");
-        //spring提供的盐值加密
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String pass = encoder.encode(user.getPassword());
-        //权限为用户
-            User user2 = loginService.userLogin(user.getUserId(), pass);
-            boolean matches = encoder.matches(user.getPassword(), user2.getPassword());
-            if((user2 !=null) && matches){
-                System.out.println(user2);
-            }else {
-                System.out.println("登录失败，用户或密码错误！！！");
+        @Test
+        void loginTest() {
+            User user = new User();
+            user.setUserId(2001);
+            user.setPassword("123");
+            //spring提供的盐值加密
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String pass = encoder.encode(user.getPassword());
+            //权限为用户
+                User user2 = loginService.userLogin(user.getUserId(), pass);
+                boolean matches = encoder.matches(user.getPassword(), user2.getPassword());
+                if((user2 !=null) && matches){
+                    System.out.println(user2);
+                }else {
+                    System.out.println("登录失败，用户或密码错误！！！");
+            }
         }
-    }
 
     @Test
     void testDate() throws ParseException {

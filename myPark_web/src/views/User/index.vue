@@ -45,7 +45,7 @@
       <a-tab-pane key="3" tab="预约车位">
 <!--        地图模块 + 弹出框预约-->
 <!--        <OrderSpace></OrderSpace>-->
-        <MyMap ></MyMap>
+        <MyMap></MyMap>
       </a-tab-pane>
       <a-tab-pane key="4" tab="历史订单">
 <!--        查询所有关联用户id的订单，按时间排序-->

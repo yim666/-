@@ -45,5 +45,7 @@ public interface UserService {
 
     ParkingLot selectOneParkingLot(Integer parkingLotId);
 
+    int updateUserMoney(User user);
+
 //    List<Map> selectParkingStatus(Integer userId);
 }

@@ -1,5 +1,6 @@
 package com.yim.controller;
 
+import com.yim.mapper.UserMapper;
 import com.yim.pojo.*;
 import com.yim.service.UserService;
 import com.yim.util.ApiResHandler;
@@ -147,6 +148,20 @@ public class UserController {
     @PutMapping("/updateSpaceStatus")
     public ApiRes updateSpaceStatus(@RequestBody ParkingSpace space){
         int i = userService.updateSpaceStatus(space);
+        return ApiResHandler.success(i);
+    }
+
+    @PutMapping("/updateUserMoney")
+    public ApiRes updateUserMoney(@RequestBody Map addMoney){
+        String userIdd = (String)addMoney.get("userId");
+        Integer money = (Integer)addMoney.get("money");
+        int userId = Integer.parseInt(userIdd);
+//        int money = Integer.parseInt(moneyy);
+        User user = userService.selectUser(userId);
+        Integer money1 = user.getMoney();
+        Integer sumMoney =money+money1;
+        user.setMoney(sumMoney);
+        int i = userService.updateUserMoney(user);
         return ApiResHandler.success(i);
     }
 

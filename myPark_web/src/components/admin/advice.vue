@@ -40,10 +40,17 @@
           this.$axios.get('/api/admin/selectAdviceList').then(res=>{
             this.adviceList=res.data.data
           })
-        }
+        },
+      thisTime(){
+        // 实现局部刷新
+        setInterval(()=>{
+          this.selectAdvice()
+        },5000)
+      }
     },
     created() {
       this.selectAdvice()
+      this.thisTime()
     }
   }
 </script>
